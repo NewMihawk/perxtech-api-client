@@ -1,6 +1,7 @@
 import { uniq } from 'lodash'
 import { PerxInvoiceRequest, PerxInvoiceRequestTransactionData, PerxInvoiceRequestUsedItem, PerxLoyalty, PerxLoyaltyTransactionRequest, PerxLoyaltyTransactionRequestUserAccount, PerxLoyaltyTransactionReservationRequest, PerxMerchant } from '..'
 import { IPerxService, PerxService } from '../client'
+import { PerxCampaign } from '../models'
 import { PerxProxyManager } from '../proxy'
 
 describe('PerxProxyManager', () => {
@@ -374,6 +375,32 @@ describe('PerxProxyManager', () => {
         identifier: testableUserIdentifierOnPerxServer,
       })
       expect(resp.accessToken).toBeTruthy()
+    })
+  })
+
+  describe('campaign', () => {
+    it.each`
+      count
+      ${1}
+      ${2}
+      ${3}
+    `('can list campaign with count $count', async ({ count }) => {
+      const listCampaign = await user.listAllCampaign(1, count)
+      expect(listCampaign.data.length).toEqual(count)
+      expect(listCampaign.data.filter((o) => o instanceof PerxCampaign).length).toEqual(count)
+      expect(uniq(listCampaign.data.map((o) => o.id).filter(Boolean)).length).toEqual(count)
+      expect(listCampaign.error).toBe(undefined)
+    })
+
+    it(`can get campaign by campaignId`, async () => {
+      const listCampaign = await user.listAllCampaign(1, 1)
+      expect(listCampaign.data.length).toBeGreaterThan(0)
+      if (listCampaign.data.length) {
+        const campaignId = listCampaign.data[0].id
+        const campaignData = await user.getCampaign(campaignId)
+        expect(campaignData).toBeTruthy()
+        expect(campaignData.id).toEqual(campaignId)
+      }
     })
   })
 })
