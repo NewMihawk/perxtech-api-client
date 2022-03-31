@@ -237,6 +237,7 @@ export interface IPerxUserProxy {
    * Query all campaign from Perx
    */
   listAllCampaign(page: number, perPage: number): Promise<PerxCampaignsResponse>
+  listAllCampaign(page: number, perPage: number, campaignType: string): Promise<PerxCampaignsResponse>
 
   /**
    * Query campaign by campaign id from Perx

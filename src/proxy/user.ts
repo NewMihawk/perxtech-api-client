@@ -162,9 +162,9 @@ export class PerxUserProxy implements IPerxUserProxy {
     return results
   }
 
-  public async listAllCampaign(page: number = 1, perPage: number = 25): Promise<PerxCampaignsResponse> {
+  public async listAllCampaign(page: number = 1, perPage: number = 25, campaignType: string | undefined = undefined): Promise<PerxCampaignsResponse> {
     const token = await this.getToken()
-    return this.perxService.listAllCampaign(token.accessToken, page, perPage)
+    return this.perxService.listAllCampaign(token.accessToken, page, perPage, campaignType)
   }
 
   public async getCampaign(campaignId: number): Promise<PerxCampaign> {

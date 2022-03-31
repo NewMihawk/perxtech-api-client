@@ -320,8 +320,9 @@ export interface IPerxUserService {
    * @param userToken 
    * @param page 
    * @param perPage 
+   * @param campaignType 
    */
-  listAllCampaign(userToken: string, page: number, perPage: number): Promise<PerxCampaignsResponse>
+  listAllCampaign(userToken: string, page: number, perPage: number, campaignType: string | undefined): Promise<PerxCampaignsResponse>
 
   /**
    * Query campaign by campaign id from Perx
@@ -917,7 +918,7 @@ export class PerxService implements IPerxService {
     return out
   }
 
-  public async listAllCampaign(userToken: string, page: number, perPage: number): Promise<PerxCampaignsResponse> {
+  public async listAllCampaign(userToken: string, page: number, perPage: number, campaignType: string | undefined = undefined): Promise<PerxCampaignsResponse> {
     const resp = await this.axios.get('/v4/campaigns', {
       headers: {
         authorization: `Bearer ${userToken}`,
@@ -925,6 +926,7 @@ export class PerxService implements IPerxService {
       params: {
         page,
         size: perPage,
+        campaign_type: campaignType || undefined
       }
     })
 
